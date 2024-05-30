@@ -23,6 +23,30 @@
                     </p>
                     <button type="button" id="start">Start Quiz</button>
                 </div>
+
+                <div id="questions" class="hide">
+                    <h2 id="question-number"></h2>
+                    <div id="answers" class="options"></div>
+                    <p id="message"></p>
+                </div>
+                
+                <div id="end-screen" class="hide">
+                    <h2>Finish!</h2>
+                    <p>Final Score: <span id="score"></span></p>
+                    <p>Enter your initials: </p>
+                    <input type="text" id="initials" max="2" />
+                    <button id="save">Save Score</button>
+                </div>
+                
+                <div id="high-scores" class="hide">
+                    <span style="float:left">
+                    <button id="play-again">Play Again?</button></span>
+                    <h2>High Scores</h2>
+                    <p>Here is your highest score: <span id="top-score"></span></p>
+                </div>
             </div>
+
+            <script src="./assets/quiz.js"></script>
+            
         </body>
 </html>
