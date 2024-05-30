@@ -1,15 +1,21 @@
 //setting up DOM
-var frontPage = document.querySelector("#front-screen")
-var endScreen = document.querySelector(".end-screen")
+var frontPage = document.getElementById("front-screen")
+var endScreen = document.getElementById("end-screen")
 var timerText = document.querySelector("#timer-text")
-var questions = document.querySelector(".questions")
-var questionNum = document.querySelector(".question-number")
-var enterInit = document.querySelector(".initials")
-var message = document.querySelector(".message")
-var score = document.querySelector(".score")
-var answers = document.querySelector(".answers")
-var options = document.querySelector("#options")
-var start = document.querySelector(".start")
+
+var questionsSec = document.getElementById("questions")
+var questionNum = document.getElementById("question-number")
+var options = document.getElementById("answers")
+var message = document.getElementById("message")
+
+
+var enterInit = document.getElementById("initials")
+
+
+var score = document.getElementById("score")
+
+
+var start = document.getElementById("start")
 var finalScore = 0;
 var index = 0;
 
@@ -86,8 +92,56 @@ function startTimer() {
 
 //Hides main screen, brings up question, emulating a page change
 function startQuiz() {
+    console.log("start button press detected!");
     frontPage.classList.add("hide");
-    questions.classList.remove("hide");
+    questionsSec.classList.remove("hide");
     startTimer();
     showQuestions();
+    
 }
+
+//ends quiz and shows user's score based on the time they had remaining
+function endQuiz() {
+    clearInterval(timer);
+    questionsSec.classList.add("hide")
+    endScreen.classList.remove("hide");
+    score.textContent = timeLeft
+    finalScore = timeLeft
+    if (timeLeft <= 0) {
+        score = timer
+        finalScore.textContent = timeLeft
+    }
+}
+
+function showQuestions() {
+    options.textContent = "";
+    message.textContent = "";
+    questionNum.textContent = questions[index].question;
+
+    var ol = document.createElement("ol");
+    var li1 = document.createElement("li");
+
+    li1.textContent = questions[index].options.A;
+    var li2 = document.createElement("li");
+
+    li2.textContent = questions[index].options.B;
+    var li3 = document.createElement("li");
+
+    li3.textContent = questions[index].options.C;
+    var li4 = document.createElement("li");
+    
+    li4.textContent = questions[index].options.D;
+
+    ol.appendChild(li1);
+    ol.appendChild(li2);
+    ol.appendChild(li3);
+    ol.appendChild(li4);
+
+    options.appendChild(ol);
+}
+    
+
+    
+    
+
+start.addEventListener("click", startQuiz);
