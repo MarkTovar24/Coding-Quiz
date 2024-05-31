@@ -10,3 +10,16 @@
 .hide {
     display: none;
 }
+
+body {
+    background-color: var(--Dark);
+    text-align: center
+
+}
+    button {
+        background-color: var(--lightpink);
+        color: #474747;
+        border-radius: 25px;
+        text-align: center;
+    }
+    

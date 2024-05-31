@@ -10,10 +10,8 @@ var message = document.getElementById("message")
 
 
 var enterInit = document.getElementById("initials")
-
-
-var score = document.getElementById("score")
-
+var scoreEl = document.getElementById("score")
+var submitBtn = document.getElementById("save")
 
 var start = document.getElementById("start")
 var finalScore = 0;
@@ -82,9 +80,10 @@ function startTimer() {
     timer = setInterval(function () {
         timeLeft--;
         timerCount.textContent = timeLeft;
-        if (timeLeft === 0) {
+        if (timeLeft === 0 || index === questions.length) {
+           clearInterval(timer)
             endQuiz();
-            clearInterval(timer)
+            
         }
         return timerCount;
     }, 1000);
@@ -112,7 +111,7 @@ function endQuiz() {
         finalScore.textContent = timeLeft
     }
 }
-
+// Shows the question "page"
 function showQuestions() {
     options.textContent = "";
     message.textContent = "";
@@ -129,7 +128,7 @@ function showQuestions() {
 
     li3.textContent = questions[index].options.C;
     var li4 = document.createElement("li");
-    
+
     li4.textContent = questions[index].options.D;
 
     ol.appendChild(li1);
@@ -139,9 +138,76 @@ function showQuestions() {
 
     options.appendChild(ol);
 }
-    
+//moves onto the next question once an answer is pressed
+function nextQuestion(event) {
+    var userChoice = event.target.textContent
+    checkAnswers(userChoice)
+    if (timeLeft <= 0) {
+        endQuiz();
+    }
+    index++;
+    if (index < questions.length) {
+        setTimeout(showQuestions, 450)
+    } else {
+        clearInterval(timer);
+        endQuiz();
+    }
+}
 
+//if the answer isnt correct, takes off ten seconds
+function checkAnswers (userChoice) {
+    if (questions[index].answer === userChoice) {
+        message.textContent = "Correct"
+    } else {
+    message.textContent = "incorrect"
+    timeLeft = timeLeft - 10
+    }
+}
+//Saves high schore into local storage based on the time left
+function saveHighScore() {
+    var initials = enterInit.value 
+    var newScore = {
+        score: timeLeft,
+        initials: initials,
+    }
+    var savedScores = JSON.parse(localStorage.getItem("scores")) || []
+    savedScores.push(newScore);
+    localStorage.setItem("scores", JSON.stringify(savedScores));
+    getHighScores();
     
-    
+}
+//shows high score data after finishing quiz
+function getHighScores() {
+    document.getElementById("high-scores").classList.remove("hide")
+    endScreen.classList.remove("hide")
+    var highScores = JSON.parse(localStorage.getItem("scores"))
+    var highestScore = 0 
+    for (var score of highScores) {
+        if (score.score > highestScore) {
+            highestScore = score.score
+        }
+    }
+    document.getElementById("top-score").textContent = highestScore;
+    var highestScoreIndex = highScores.indexOf(highScores.find(
+        function(score){
+            return score.score === highestScore
+        }
+    ))
+    highScores.splice(highestScoreIndex, 1)
+    var ul = document.createElement("ul");
+    highScores.forEach(function (highscore) {
+        var li = document.createElement("li")
+        li.innerHTML = `<span>Initials: ${highscore.initials} score: ${highScore.score}`
+        ul.appendChild(li)
+    })
+    document.getElementById("high-scores").appendChild(ul)
+}
 
+document.getElementById("play-again").addEventListener("click", function() {
+    window.location.reload()
+})
+    
+//event listeners so the thing actually works
+options.addEventListener("click", nextQuestion);
 start.addEventListener("click", startQuiz);
+submitBtn.addEventListener("click", saveHighScore);
